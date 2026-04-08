@@ -93,5 +93,12 @@
 			background-color: var(--b2);
 			border-color: var(--b2);
 		}
+
+		&:disabled {
+			background-color: rgb(169, 169, 169);
+			border-color: rgb(169, 169, 169);
+			color: black;
+			cursor: not-allowed;
+		}
 	}
 }
