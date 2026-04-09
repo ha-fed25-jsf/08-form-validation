@@ -22,4 +22,24 @@ function validateName(input) {
 }
 
 
-export { validateName }
+
+// Returnerar ett informativt, användarvänligt felmeddelande om email är en giltig e-postadress. Annars returnerar den tom sträng.
+function validateEmail(input) {
+	// Vad är kraven?
+	// E-postadress är specificerat i en standard. Vi gör en enklare kontroll: måste ha @, vara icke-tom, inga whitespace.
+
+	if( input.length === 0 ) {
+		return 'Var vänlig och skriv din e-postadress.'
+	}
+	else if( input.includes(' ') ) {
+		return 'Inga mellanslag i din e-post tack.'
+	}
+	else if( !input.includes('@') ) {
+		return 'Fel format, e-post måste innehålla @.'
+	}
+	else {
+		return ''  // Good enough!
+	}
+}
+
+export { validateName, validateEmail }

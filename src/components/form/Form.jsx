@@ -1,13 +1,15 @@
 import { useState } from 'react'
-import { validateName } from './validate.js'
+import { validateName, validateEmail } from './validate.js'
 
 const Form = () => {
 	const [formData, setFormData] = useState({
-		name: ''
+		name: '',
+		email: ''
 	})
 	const [touched, setTouched] = useState(false)  // gäller för hela formuläret
 
-	// Validering av första fältet
+	// ---------- NAMN ----------------------- //
+	// Validering av namn-fältet
 	const nameError = validateName(formData.name)
 	let nameCss = ''
 	let nameErrorCss = 'error'
@@ -21,11 +23,26 @@ const Form = () => {
 	}
 	const nameIsValid = nameError === ''
 
-	// TODO: validering av e-post
+	// ---------- E-POST --------------------- //
+	// Validering av e-post-fältet
+	const emailError = validateEmail(formData.email)
+	let emailCss = ''
+	let emailErrorCss = 'error'
+	if( touched ) {
+		if( emailError ) {
+			emailCss = 'invalid'
+			emailErrorCss = 'error show'
+		} else {
+			emailCss = 'valid'
+		}
+	}
+	const emailIsValid = emailError === ''
 
 
-	const fieldsAreValid = nameIsValid // && emailIsValid  // TODO: lägg till kod för e-post här
+	const fieldsAreValid = nameIsValid && emailIsValid
 	const formIsValid = !touched || fieldsAreValid
+	// ---------- Slut på formulär ------------- //
+
 
 	const handleSubmit = event => {
 		// Indikera att användaren har fått en chans att fylla i formuläret - nu är det fritt fram att visa felmeddelanden
@@ -52,12 +69,20 @@ const Form = () => {
 					className={nameCss}
 					onChange={e => setFormData({ ...formData, name: e.target.value })}
 					value={formData.name}
+					aria-invalid={!nameIsValid}
+					aria-describedby="name-error"
 					/>
-				<p className={nameErrorCss}> {nameError} </p>
+				<p id="name-error" className={nameErrorCss}> {nameError} </p>
 
-				<label> E-post </label>
-				<input />
-				<p className="error"> Error! </p>
+				<label htmlFor="email"> E-post </label>
+				<input id="email"
+					className={emailCss}
+					onChange={e => setFormData({ ...formData, email: e.target.value })}
+					value={formData.email}
+					aria-invalid={!emailIsValid}
+					aria-describedby="email-error"
+					/>
+				<p id="email-error" className={emailErrorCss}> {emailError} </p>
 
 			</section>
 
@@ -71,7 +96,7 @@ const Form = () => {
 
 			{/* Detta är som en console.log, ha inte kvar i slutliga versionen av ditt formulär... */}
 			<h2> Test av formuläret </h2>
-			<p> {formData.name} </p>
+			<p> {formData.name}, {formData.email} </p>
 
 			</form>
 		</div>
