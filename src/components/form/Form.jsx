@@ -29,7 +29,7 @@ const Form = () => {
 			nameCss = 'valid'
 		}
 	}
-	const nameIsValid = nameError === ''
+	const nameIsValid = !nameError
 
 	// ---------- E-POST --------------------- //
 	// Validering av e-post-fältet
@@ -43,7 +43,7 @@ const Form = () => {
 			emailCss = 'valid'
 		}
 	}
-	const emailIsValid = emailError === ''
+	const emailIsValid = !emailError
 
 	// ---------- FÖDELSEÅR-------------------- //
 	// Validering av år-fältet
@@ -57,7 +57,7 @@ const Form = () => {
 			yearCss = 'valid'
 		}
 	}
-	const yearIsValid = yearError === ''
+	const yearIsValid = !yearError
 
 
 	const fieldsAreValid = nameIsValid && emailIsValid && yearIsValid
