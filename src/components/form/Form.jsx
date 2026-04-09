@@ -14,7 +14,6 @@ const Form = () => {
 	const nameError = result.name
 	const emailError = result.email
 
-
 	// ---------- NAMN ----------------------- //
 	// Validering av namn-fältet
 	// const nameError = validateName(formData.name)

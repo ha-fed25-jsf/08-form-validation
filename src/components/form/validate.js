@@ -1,10 +1,19 @@
 import Joi from 'joi'
 
 const schema = Joi.object({
-	name: Joi.string().min(2).trim().required()/*.messages({
-		"string.empty": 'Var vänlig och skriv ditt namn.'
-	})*/,
-	email: Joi.string().email().required()
+	name: Joi.string().min(2).trim().required().messages({
+		"string.empty": 'Var vänlig och skriv ditt namn.',
+		"string.min": 'Skriv ditt fullständiga namn (minst två bokstäver).',
+		"string.trim": 'Undvik mellanslag före eller efter ditt namn.'
+	}),
+
+	email: Joi.string()
+		.email()
+		.required()
+		.messages({
+			"string.email": 'Skriv din e-post på formatet "exempel@domän.com".',
+			"string.empty": 'Var vänlig och skriv din e-postadress.',
+		})
 })
 
 // Returnera en lista med felmeddelanden
