@@ -4,7 +4,8 @@ import { validateName, validateEmail, validate } from './validate.js'
 const Form = () => {
 	const [formData, setFormData] = useState({
 		name: '',
-		email: ''
+		email: '',
+		year: ''
 	})
 	const [touched, setTouched] = useState(false)  // gäller för hela formuläret
 
@@ -13,10 +14,11 @@ const Form = () => {
 	const result = validate(formData)
 	const nameError = result.name
 	const emailError = result.email
+	const yearError = result.year
 
 	// ---------- NAMN ----------------------- //
 	// Validering av namn-fältet
-	// const nameError = validateName(formData.name)
+	// Möjlig förbättring: const { nameCss, nameErrorCss, nameIsValid } = myfunction(touched, nameError)
 	let nameCss = ''
 	let nameErrorCss = 'error'
 	if( touched ) {
@@ -31,7 +33,6 @@ const Form = () => {
 
 	// ---------- E-POST --------------------- //
 	// Validering av e-post-fältet
-	// const emailError = validateEmail(formData.email)
 	let emailCss = ''
 	let emailErrorCss = 'error'
 	if( touched ) {
@@ -44,8 +45,22 @@ const Form = () => {
 	}
 	const emailIsValid = emailError === ''
 
+	// ---------- FÖDELSEÅR-------------------- //
+	// Validering av år-fältet
+	let yearCss = ''
+	let yearErrorCss = 'error'
+	if( touched ) {
+		if( yearError ) {
+			yearCss = 'invalid'
+			yearErrorCss = 'error show'
+		} else {
+			yearCss = 'valid'
+		}
+	}
+	const yearIsValid = yearError === ''
 
-	const fieldsAreValid = nameIsValid && emailIsValid
+
+	const fieldsAreValid = nameIsValid && emailIsValid && yearIsValid
 	const formIsValid = !touched || fieldsAreValid
 	// ---------- Slut på formulär ------------- //
 
@@ -89,6 +104,16 @@ const Form = () => {
 					aria-describedby="email-error"
 					/>
 				<p id="email-error" className={emailErrorCss}> {emailError} </p>
+
+				<label htmlFor="birth-year"> Födelseår </label>
+				<input id="birth-year"
+					className={yearCss}
+					onChange={e => setFormData({ ...formData, year: e.target.value })}
+					value={formData.year}
+					aria-invalid={!yearIsValid}
+					aria-describedby="year-error"
+					/>
+				<p id="year-error" className={yearErrorCss}> {yearError} </p>
 
 			</section>
 

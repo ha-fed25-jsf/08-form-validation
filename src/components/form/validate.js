@@ -1,11 +1,16 @@
 import Joi from 'joi'
 
 const schema = Joi.object({
-	name: Joi.string().min(2).trim().required().messages({
-		"string.empty": 'Var vänlig och skriv ditt namn.',
-		"string.min": 'Skriv ditt fullständiga namn (minst två bokstäver).',
-		"string.trim": 'Undvik mellanslag före eller efter ditt namn.'
-	}),
+	name: Joi.string()
+		.min(2)
+		// .trim() <- vi kan inte använda trim tillsammans med convert:true
+		.pattern(/^\S+.+\S+$/)  // i stället för trim: whitespace inte tillåtna \S i början och slutet
+		.required()
+		.messages({
+			"string.empty": 'Var vänlig och skriv ditt namn.',
+			"string.min": 'Skriv ditt fullständiga namn (minst två bokstäver).',
+			"string.pattern.base": 'Undvik mellanslag före eller efter ditt namn.'
+		}),
 
 	email: Joi.string()
 		.email()
@@ -13,6 +18,18 @@ const schema = Joi.object({
 		.messages({
 			"string.email": 'Skriv din e-post på formatet "exempel@domän.com".',
 			"string.empty": 'Var vänlig och skriv din e-postadress.',
+		}),
+
+	year: Joi.number()
+		.required()
+		// åldersgräns 13 år: 2026-13 === 2013
+		// 2026-126 === 1900
+		.max(2013)
+		.min(1900)
+		.messages({
+			"number.base": 'Var vänlig och skriv din ålder.',
+			"number.max": 'Du måste vara minst 13 år för att registrera konto.',
+			"number.min": 'Du är för gammal för att registrera konto.'
 		})
 })
 
@@ -20,7 +37,7 @@ const schema = Joi.object({
 function validate(formData) {
 	const { error } = schema.validate(formData, {
 		abortEarly: false,  // för att se alla fel, inte bara det första
-		convert: false  // för att "trim" ska fungera
+		convert: true  // för att omvandla year string->number
 	})
 
 	// Om det finns valideringsfel hittar vi meddelandena i error.details[i].message
@@ -36,11 +53,8 @@ function validate(formData) {
 		result[key] = message
 	})
 
-	console.log('Joi validate, result= ', result)
+	// console.log('Joi validate, result= ', result)
 	return result   // {name, email}
-
-	// console.log('Joi validate, error= ', error.details[0].message)
-	// console.log(JSON.stringify(error))
 }
 
 
