@@ -1,3 +1,41 @@
+import Joi from 'joi'
+
+const schema = Joi.object({
+	name: Joi.string().min(2).trim().required()/*.messages({
+		"string.empty": 'Var vänlig och skriv ditt namn.'
+	})*/,
+	email: Joi.string().email().required()
+})
+
+// Returnera en lista med felmeddelanden
+function validate(formData) {
+	const { error } = schema.validate(formData, {
+		abortEarly: false,  // för att se alla fel, inte bara det första
+		convert: false  // för att "trim" ska fungera
+	})
+
+	// Om det finns valideringsfel hittar vi meddelandena i error.details[i].message
+	if( !error ) {
+		return {}
+	}
+
+	const result = {}
+	error.details.forEach(({ message, path }) => {
+		// message är ett felmeddelande, string
+		// path är en lista med namn på egenskapen som har felaktigt värde
+		const key = path[0]   // kommer vara 'name' eller 'email'
+		result[key] = message
+	})
+
+	console.log('Joi validate, result= ', result)
+	return result   // {name, email}
+
+	// console.log('Joi validate, error= ', error.details[0].message)
+	// console.log(JSON.stringify(error))
+}
+
+
+
 
 // Returnerar ett informativt, användarvänligt felmeddelande om input är ett giltigt namn. Annars returnerar den tom sträng.
 function validateName(input) {
@@ -42,4 +80,4 @@ function validateEmail(input) {
 	}
 }
 
-export { validateName, validateEmail }
+export { validateName, validateEmail, validate }

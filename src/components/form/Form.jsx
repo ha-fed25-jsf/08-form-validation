@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { validateName, validateEmail } from './validate.js'
+import { validateName, validateEmail, validate } from './validate.js'
 
 const Form = () => {
 	const [formData, setFormData] = useState({
@@ -8,9 +8,16 @@ const Form = () => {
 	})
 	const [touched, setTouched] = useState(false)  // gäller för hela formuläret
 
+
+	// Joi-validering av hela formulärets data på samma gång. Vi vill ha ett objekt med felmeddelanden för formulärelementen: { name, email }
+	const result = validate(formData)
+	const nameError = result.name
+	const emailError = result.email
+
+
 	// ---------- NAMN ----------------------- //
 	// Validering av namn-fältet
-	const nameError = validateName(formData.name)
+	// const nameError = validateName(formData.name)
 	let nameCss = ''
 	let nameErrorCss = 'error'
 	if( touched ) {
@@ -25,7 +32,7 @@ const Form = () => {
 
 	// ---------- E-POST --------------------- //
 	// Validering av e-post-fältet
-	const emailError = validateEmail(formData.email)
+	// const emailError = validateEmail(formData.email)
 	let emailCss = ''
 	let emailErrorCss = 'error'
 	if( touched ) {
